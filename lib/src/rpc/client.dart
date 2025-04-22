@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
@@ -16,15 +17,15 @@ part 'extension.dart';
 abstract class RpcClient {
   factory RpcClient(
     String url, {
-    Duration timeout = const Duration(seconds: 30),
     Map<String, String> customHeaders = const {},
+    Dio? http,
   }) =>
       _RpcClient(
         url,
         JsonRpcClient(
           url,
-          timeout: timeout,
           customHeaders: customHeaders,
+          http: http,
         ),
       );
 

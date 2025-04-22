@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:solana/dto.dart';
 import 'package:solana/solana.dart';
 
@@ -9,7 +10,8 @@ class SolanaClient {
     Uri? websocketUrl,
     Duration timeout = const Duration(seconds: 30),
     Map<String, String> headers = const {},
-  })  : rpcClient = RpcClient(rpcUrl.toString(), timeout: timeout, customHeaders: headers),
+    Dio? http,
+  })  : rpcClient = RpcClient(rpcUrl.toString(), customHeaders: headers, http: http),
         _timeout = timeout,
         _websocketUrl = websocketUrl;
 

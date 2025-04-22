@@ -7,7 +7,7 @@ final devnetRpcUrl =
 final devnetWebsocketUrl =
     Platform.environment['DEVNET_WEBSOCKET_URL'] ?? 'ws://127.0.0.1:8900';
 
-SolanaClient createTestSolanaClient({bool useLocal = true}) => SolanaClient(
+SolanaClient createTestSolanaClient({bool useLocal = false}) => SolanaClient(
       rpcUrl: Uri.parse(
         useLocal ? devnetRpcUrl : 'https://api.devnet.solana.com',
       ),

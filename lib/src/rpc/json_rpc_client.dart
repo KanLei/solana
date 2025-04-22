@@ -1,22 +1,20 @@
 import 'dart:async';
-import 'dart:convert';
 
-import 'package:http/http.dart';
+import 'package:dio/dio.dart';
 import 'package:solana/src/exceptions/http_exception.dart';
 import 'package:solana/src/exceptions/json_rpc_exception.dart';
-import 'package:solana/src/exceptions/rpc_timeout_exception.dart';
 import 'package:solana/src/rpc/json_rpc_request.dart';
 
 class JsonRpcClient {
   JsonRpcClient(
     this._url, {
-    required Duration timeout,
     required Map<String, String> customHeaders,
-  })  : _timeout = timeout,
+    Dio? http,
+  })  : _http = http ?? Dio(),
         _headers = {..._defaultHeaders, ...customHeaders};
 
+  final Dio _http;
   final String _url;
-  final Duration _timeout;
   final Map<String, String> _headers;
   int _lastId = 1;
 
@@ -69,25 +67,16 @@ class JsonRpcClient {
     JsonRpcRequest request,
   ) async {
     final body = request.toJson();
-    // Perform the POST request
-    final Response response = await post(
-      Uri.parse(_url),
-      headers: _headers,
-      body: json.encode(body),
-    ).timeout(
-      _timeout,
-      onTimeout: () => throw RpcTimeoutException(
-        method: request.method,
-        body: body,
-        timeout: _timeout,
-      ),
+    final response = await _http.post(
+      _url,
+      data: body,
+      options: Options(headers: _headers),
     );
-    // Handle the response
     if (response.statusCode == 200) {
-      return _JsonRpcResponse._parse(json.decode(response.body));
+      return _JsonRpcResponse._parse(response.data);
     }
 
-    throw HttpException(response.statusCode, response.body);
+    throw HttpException(response.statusCode ?? -1, response.toString());
   }
 }
 

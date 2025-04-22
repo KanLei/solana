@@ -15,7 +15,7 @@ const int _transferredAmount = lamportsPerSol;
 void main() {
   group('Timeout exceptions', () {
     test('throws exception with method name on timeout', () {
-      final client = RpcClient(devnetRpcUrl, timeout: Duration.zero);
+      final client = RpcClient(devnetRpcUrl);
 
       expect(
         client.getTransactionCount(),
@@ -30,7 +30,7 @@ void main() {
     });
 
     test('throws exception with bulk method names on timeout', () {
-      final client = RpcClient(devnetRpcUrl, timeout: Duration.zero);
+      final client = RpcClient(devnetRpcUrl);
       const transactions = [
         TransactionSignatureInformation(
           signature: 'signature',
