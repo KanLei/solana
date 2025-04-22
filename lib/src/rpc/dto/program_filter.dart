@@ -1,0 +1,3 @@
+class ProgramFilter {
+  const ProgramFilter();
+}
